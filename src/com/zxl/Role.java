@@ -10,16 +10,19 @@ import java.util.Random;
  * @encode UTF-8
  */
 public class Role {
-    protected int radius, x, y, dx, dy;
+    protected double x, y, dx, dy;
+    protected int radius;
     // 角色的半径（尽量把角色处理为圆形，分配碰撞检测），角色的坐标，前进的距离
     private int id;
     protected GUI gui;
-    private int type; // 角色的类型，不写枚举类了麻烦
-    // 1代表滑稽，2代表机器人，3代表导弹，4代表派大星
-    public static String[] imgPath = {"./res/normal.png", "./res/rocket.png",
-            "./res/missile.png", "./res/bigStar.png"};
+    public int type; // 角色的类型，不写枚举类了麻烦
+    public String color; //小球的颜色，以后要删除这个，暂时保留调试代码
+    // 1代表滑稽，2代表导弹，3代表机器人，4代表派大星，5代表炸药，6代表药水
+    public static String[] imgPath = {" ", "./res/normal.png", "./res/rocket.png",
+            "./res/missile.png", "./res/bigStar.png", "./res/boom.png", "./res/life.png"};
+    protected int angle = 0; //图片转向的角度(不是弧度)
 
-    public Role(int X, int Y, int R, int id, int type, GUI gui, int dx, int dy) {
+    public Role(double X, double Y, int R, int id, int type, GUI gui, double dx, double dy) {
         x = X;
         y = Y;
         radius = R;
@@ -32,10 +35,11 @@ public class Role {
         draw();
     }
 
-    public Role(int X, int Y, int R, int id, GUI gui) {
+    public Role(double X, double Y, int R, int id, int type, GUI gui) {
         x = X;
         y = Y;
         radius = R;
+        this.type = type;
         this.gui = gui;
         this.id = id;
     }
@@ -51,23 +55,28 @@ public class Role {
         x += dx;
         y += dy;
         if (x + radius > gui.graphWidth || x - radius < 0) {
-            dx = -dx;
+            calMoveDirection();
         }
         if (y + radius > gui.graphHeight || y - radius < GUI.PROGRESSWIDTH) {
-            dy = -dy;
+            calMoveDirection();
         }
         draw();
     }
 
-    public int getX() {
+    protected void calMoveDirection() {
+        dx = -dx;
+        dy = -dy;
+    }
+
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public int getR() {
+    public double getR() {
         return radius;
     }
 

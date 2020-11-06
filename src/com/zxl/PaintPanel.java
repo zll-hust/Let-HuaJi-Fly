@@ -1,9 +1,10 @@
 package com.zxl;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
+import sun.awt.image.BufferedImageGraphicsConfig;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 
@@ -31,28 +32,19 @@ public class PaintPanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
 
-
         for (Role nowPainting : roles) {
-            int maxBoomsNr = 0;
-            int maxLifesNr = 0;
             if (nowPainting != null) {
 //                    System.out.println(nowPainting.color + " " + nowPainting.getID());
-                if (nowPainting.color.equals("#EED5D2") && (maxBoomsNr <= 3)) {
-                    Image image = Toolkit.getDefaultToolkit().getImage("./res/boom.png");
-                    nowPainting.radius = 16;
-                    g.drawImage(image, nowPainting.getX(), nowPainting.getY(), this);
-                    maxBoomsNr++;
-                    continue;
-                } else if (nowPainting.color.equals("#6A5ACD") && (maxLifesNr <= 3)) {
-                    Image image = Toolkit.getDefaultToolkit().getImage("./res/life.png");
-                    nowPainting.radius = 16;
-                    g.drawImage(image, nowPainting.getX(), nowPainting.getY(), this);
-                    maxLifesNr++;
-                    continue;
+                if (nowPainting.type == 1) {
+                    g.setColor(Color.decode(nowPainting.color));
+                    g.fillOval((int)nowPainting.getX() - (int)nowPainting.getR(), (int)nowPainting.getY() - (int)nowPainting.getR(),
+                            nowPainting.getD(), nowPainting.getD());
+                }else{
+                    Image image = Toolkit.getDefaultToolkit().getImage(Role.imgPath[nowPainting.type]);
+                    BufferedImage img = MyUtils.Rotate(image, nowPainting.angle);
+                    g.drawImage(img, (int)nowPainting.getX() - (int)nowPainting.getR(), (int)nowPainting.getY() - (int)nowPainting.getR(), this);
                 }
-                g.setColor(Color.decode(nowPainting.color));
-                g.fillOval(nowPainting.getX() - nowPainting.getR(), nowPainting.getY() - nowPainting.getR(),
-                        nowPainting.getD(), nowPainting.getD());
+
             }
         }
     }

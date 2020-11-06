@@ -20,7 +20,6 @@ public class Main {
         Game.gamePlaying = false;
         GUI.initColor = gui.jf.getContentPane().getBackground();
 
-        Game.historyScore = MyUtils.readRecordFromFile("./res/record.txt");
 
         gui.jf.getContentPane().repaint();
 
@@ -35,10 +34,7 @@ public class Main {
                 gui.currentScoreLabel.setVisible(true);
                 gui.maxScoreLabel.setVisible(true);
                 gui.gameLevelLabel.setVisible(true);
-                Game.score = 0;
                 Game.enemyMovingSpeed = 100;
-                gui.currentScoreLabel.setText("当前成绩：" + Game.score);
-                gui.maxScoreLabel.setText("历史最高：" + Game.historyScore);
                 gui.gameLevelLabel.setText("难度等级：" + (100 - Game.enemyMovingSpeed));
                 gui.jProBar.getjProgressBar().setValue(100);
                 gui.jProBar.getjProgressBar().setVisible(true);
@@ -55,7 +51,7 @@ public class Main {
         gui.jf.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                MyUtils.writeRecordInFile("./res/record.txt", Game.historyScore);
+                //TODO
             }
         });
 
@@ -63,7 +59,7 @@ public class Main {
         gui.exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MyUtils.writeRecordInFile("./res/record.txt", Game.historyScore);
+                //TODO
                 System.exit(0);
             }
         });

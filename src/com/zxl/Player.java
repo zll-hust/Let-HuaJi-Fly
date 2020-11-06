@@ -9,8 +9,9 @@ package com.zxl;
 public class Player extends Role {
     private int Max;
 
-    public Player(int X, int Y, int R, int id, GUI gui, int Maxsize) {
-        super(X, Y, R, id, gui);
+    public Player(int X, int Y, int R, int id, String color, GUI gui, int Maxsize) {
+        super(X, Y, R, id, 1, gui);
+        this.color = color;
         Max = Maxsize;
         draw();
     }
