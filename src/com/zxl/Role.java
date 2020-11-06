@@ -11,11 +11,13 @@ import java.util.Random;
  */
 public class Role {
     protected int radius, x, y, dx, dy;
+    // 角色的半径（尽量把角色处理为圆形，分配碰撞检测），角色的坐标，前进的距离
     private int id;
     protected GUI gui;
-    private int type;
+    private int type; // 角色的类型，不写枚举类了麻烦
+    // 1代表滑稽，2代表机器人，3代表导弹，4代表派大星
     public static String[] imgPath = {"./res/normal.png", "./res/rocket.png",
-            "./res/missile.png", "./res/bigStar.png", "./res/boom.png", "./res/life.png"};
+            "./res/missile.png", "./res/bigStar.png"};
 
     public Role(int X, int Y, int R, int id, int type, GUI gui, int dx, int dy) {
         x = X;
