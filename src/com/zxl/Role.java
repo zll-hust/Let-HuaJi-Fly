@@ -20,7 +20,7 @@ public class Role {
     // 1代表滑稽，2代表导弹，3代表机器人，4代表派大星，5代表炸药，6代表药水
     public static String[] imgPath = {" ", "./res/normal.png", "./res/rocket.png",
             "./res/missile.png", "./res/bigStar.png", "./res/boom.png", "./res/life.png"};
-    protected int angle = 0; //图片转向的角度(不是弧度)
+    public int angle = 0; //图片转向的角度(不是弧度)
 
     public Role(double X, double Y, int R, int id, int type, GUI gui, double dx, double dy) {
         x = X;

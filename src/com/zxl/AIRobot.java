@@ -2,6 +2,12 @@ package com.zxl;
 
 import static com.zxl.Game.random;
 
+/**
+ * Description:
+ * AI机器人，会根据地形跟踪滑稽，发射炮弹
+ *
+ * @encode UTF-8
+ */
 public class AIRobot extends Role {
     private Player p; //玩家
     private static int speed = 15; //控制速度，越大越快
@@ -14,7 +20,7 @@ public class AIRobot extends Role {
     }
 
     /*
-     * 导弹行动算法：根据创建角色时滑稽的位置定位导弹发出的方向，导弹由墙体出发，射向滑稽
+     * AI机器人
      */
     protected void calMoveDirection() {
 

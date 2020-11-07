@@ -9,7 +9,7 @@ import javax.swing.plaf.basic.BasicProgressBarUI;
 
 /**
  * Description:
- * 没仔细看，好像是背景颜色什么的
+ * 角色血量类，控制血量条背景颜色，血量为0游戏结束
  *
  * @encode UTF-8
  */

@@ -1,10 +1,12 @@
 package com.zxl;
 
-import sun.awt.image.BufferedImageGraphicsConfig;
+//import sun.awt.image.BufferedImageGraphicsConfig;
+
+import com.zxl.MyUtils;
+import com.zxl.Role;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.swing.JPanel;
 

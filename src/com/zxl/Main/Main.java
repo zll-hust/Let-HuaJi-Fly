@@ -1,4 +1,7 @@
-package com.zxl;
+package com.zxl.Main;
+
+import com.zxl.GUI;
+import com.zxl.Game;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
