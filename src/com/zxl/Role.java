@@ -5,22 +5,22 @@ import java.util.Random;
 
 /**
  * Description:
- * è§’è‰²ç±»ï¼Œä½œä¸ºç©å®¶ç±»ã€æ€ªç‰©ç±»çš„çˆ¶ç±»
+ * ½ÇÉ«Àà£¬×÷ÎªÍæ¼ÒÀà¡¢¹ÖÎïÀàµÄ¸¸Àà
  *
  * @encode UTF-8
  */
-public class Role {
+public class Role 
+{
     protected double x, y, dx, dy;
     protected int radius;
-    // è§’è‰²çš„åŠå¾„ï¼ˆå°½é‡æŠŠè§’è‰²å¤„ç†ä¸ºåœ†å½¢ï¼Œåˆ†é…ç¢°æ’æ£€æµ‹ï¼‰ï¼Œè§’è‰²çš„åæ ‡ï¼Œå‰è¿›çš„è·ç¦»
+    // ½ÇÉ«µÄ°ë¾¶£¨¾¡Á¿°Ñ½ÇÉ«´¦ÀíÎªÔ²ĞÎ£¬·ÖÅäÅö×²¼ì²â£©£¬½ÇÉ«µÄ×ø±ê£¬Ç°½øµÄ¾àÀë
     private int id;
     protected GUI gui;
-    public int type; // è§’è‰²çš„ç±»å‹ï¼Œä¸å†™æšä¸¾ç±»äº†éº»çƒ¦
-    public String color; //å°çƒçš„é¢œè‰²ï¼Œä»¥åè¦åˆ é™¤è¿™ä¸ªï¼Œæš‚æ—¶ä¿ç•™è°ƒè¯•ä»£ç 
-    // 1ä»£è¡¨æ»‘ç¨½ï¼Œ2ä»£è¡¨å¯¼å¼¹ï¼Œ3ä»£è¡¨æœºå™¨äººï¼Œ4ä»£è¡¨æ´¾å¤§æ˜Ÿï¼Œ5ä»£è¡¨ç‚¸è¯ï¼Œ6ä»£è¡¨è¯æ°´
-    public static String[] imgPath = {" ", "./res/normal.png", "./res/rocket.png",
+    public int type; // ½ÇÉ«µÄÀàĞÍ£¬²»Ğ´Ã¶¾ÙÀàÁËÂé·³
+    // 1´ú±í»¬»ü£¬2´ú±íµ¼µ¯£¬3´ú±í»úÆ÷ÈË£¬4´ú±íÅÉ´óĞÇ£¬5´ú±íÕ¨Ò©£¬6´ú±íÒ©Ë®£¬7´ú±í×Óµ¯
+    public static String[] imgPath = {" ", "./res/huaji.png", "./res/rocket.png",
             "./res/missile.png", "./res/bigStar.png", "./res/boom.png", "./res/life.png"};
-    public int angle = 0; //å›¾ç‰‡è½¬å‘çš„è§’åº¦(ä¸æ˜¯å¼§åº¦)
+    public int angle = 0; //Í¼Æ¬×ªÏòµÄ½Ç¶È(²»ÊÇ»¡¶È)
 
     public Role(double X, double Y, int R, int id, int type, GUI gui, double dx, double dy) {
         x = X;
@@ -87,5 +87,4 @@ public class Role {
     public int getID() {
         return id;
     }
-
 }

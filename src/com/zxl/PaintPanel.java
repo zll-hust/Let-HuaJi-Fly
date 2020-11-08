@@ -1,7 +1,5 @@
 package com.zxl;
 
-//import sun.awt.image.BufferedImageGraphicsConfig;
-
 import com.zxl.MyUtils;
 import com.zxl.Role;
 
@@ -12,7 +10,7 @@ import javax.swing.JPanel;
 
 /**
  * Description:
- * 涔熶笉鐭ラ亾鏄暐锛屽ソ鍍忔槸鎶婅鑹茬敾鍒拌儗鏅笂鐨勪竴涓被
+ * 也不知道是啥，好像是把角色画到背景上的一个类
  *
  * @encode UTF-8
  */
@@ -37,15 +35,15 @@ public class PaintPanel extends JPanel {
         for (Role nowPainting : roles) {
             if (nowPainting != null) {
 //                    System.out.println(nowPainting.color + " " + nowPainting.getID());
-                if (nowPainting.type == 1) {
-                    g.setColor(Color.decode(nowPainting.color));
+                /*if (nowPainting.type == 1) {
+                    //g.setColor(Color.decode(nowPainting.color));
                     g.fillOval((int)nowPainting.getX() - (int)nowPainting.getR(), (int)nowPainting.getY() - (int)nowPainting.getR(),
                             nowPainting.getD(), nowPainting.getD());
-                }else{
+                }else{       */
                     Image image = Toolkit.getDefaultToolkit().getImage(Role.imgPath[nowPainting.type]);
                     BufferedImage img = MyUtils.Rotate(image, nowPainting.angle);
                     g.drawImage(img, (int)nowPainting.getX() - (int)nowPainting.getR(), (int)nowPainting.getY() - (int)nowPainting.getR(), this);
-                }
+                
 
             }
         }

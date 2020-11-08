@@ -2,23 +2,27 @@ package com.zxl;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
 
 /**
  * Description:
- * GUIï¼Œæ¸¸æˆæ•´ä½“ç•Œé¢ï¼ŒåŒ…æ‹¬å…¥å£å¤„ç•Œé¢
+ * GUI£¬ÓÎÏ·ÕûÌå½çÃæ£¬°üÀ¨Èë¿Ú´¦½çÃæ
  *
  * @encode UTF-8
  */
-public class GUI {
+public class GUI 
+{
     public final int graphWidth;
     public final int graphHeight;
-    public final int STARTX = 150; // å¼€å§‹å›¾æ ‡çš„åæ ‡
+    public final int STARTX = 150; // ¿ªÊ¼Í¼±êµÄ×ø±ê
     public final int STARTY = 500;
-    public final int EXITX = 300; // ç»“æŸå›¾æ ‡çš„åæ ‡
+    public final int EXITX = 300; // ½áÊøÍ¼±êµÄ×ø±ê
     public final int EXITY = 500;
-    public final int HUAJIX = 200; // æ»‘ç¨½çš„åæ ‡
+    public final int HUAJIX = 200; // »¬»üµÄ×ø±ê
     public final int HUAJIY = 200;
     public static final int PROGRESSWIDTH = 40;
     public static final int BOTTOM = 70;
@@ -26,8 +30,8 @@ public class GUI {
     public int mouseX;
     public int mouseY;
     public Role[] roles = new Role[Game.EnemyNr + 3];
-    public PaintPanel conn = new PaintPanel(roles, "paintPanel");// æ¸¸æˆä¸­çš„ç•Œé¢
-    public JFrame jf; // åˆå§‹ç•Œé¢
+    public PaintPanel conn = new PaintPanel(roles, "paintPanel");// ÓÎÏ·ÖĞµÄ½çÃæ
+    public  JFrame jf; // ³õÊ¼½çÃæ
     public JButton start;
     public JButton exit;
     public JLabel huaJi;
@@ -35,19 +39,23 @@ public class GUI {
     public JLabel maxScoreLabel;
     public JLabel gameLevelLabel;
     public JLabel letHuaJiFly;
-    public ProgressUI jProBar; // ç”Ÿå‘½å€¼
+    public ProgressUI jProBar; // ÉúÃüÖµ
+    Random rand = new Random();
+    public int movex = rand.nextInt(50) + 20;
+    public int movey = rand.nextInt(50) + 20;
 
     public static Color initColor;
 
-    public GUI() {
-        jf = new JFrame("Let HuaJi Fly!"); // é¡¶éƒ¨æ ‡é¢˜
-        Toolkit kit = Toolkit.getDefaultToolkit(); // è‡ªé€‚åº”å±å¹•å¤§å°
+    public GUI() 
+    {
+        jf = new JFrame("Let HuaJi Fly!"); // ¶¥²¿±êÌâ
+        Toolkit kit = Toolkit.getDefaultToolkit(); // ×ÔÊÊÓ¦ÆÁÄ»´óĞ¡
         graphWidth = kit.getScreenSize().width;
         graphHeight = kit.getScreenSize().height - BOTTOM;
 
-        jf.setBounds(graphWidth / 2 - 300, graphHeight / 2 - 400, 600, 800); // è®¾å®šä½ç½®
+        jf.setBounds(graphWidth / 2 - 300, graphHeight / 2 - 400, 600, 800); // Éè¶¨Î»ÖÃ
 
-        jf.setLayout(null); // æ¸…ç©ºå¸ƒå±€ç®¡ç†å™¨
+        jf.setLayout(null); // Çå¿Õ²¼¾Ö¹ÜÀíÆ÷
         jf.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         conn.setLayout(null);
         start = new JButton();
@@ -56,21 +64,21 @@ public class GUI {
         exit.setBounds(EXITX, EXITY, 200, 70);
 
         start.setIcon(new ImageIcon("./res/start.png"));
-        start.setMargin(new Insets(0, 0, 0, 0));//å°†è¾¹æ¡†å¤–çš„ä¸Šä¸‹å·¦å³ç©ºé—´è®¾ç½®ä¸º0
-        start.setIconTextGap(0);//å°†æ ‡ç­¾ä¸­æ˜¾ç¤ºçš„æ–‡æœ¬å’Œå›¾æ ‡ä¹‹é—´çš„é—´éš”é‡è®¾ç½®ä¸º0
-        start.setBorderPainted(false);//ä¸æ‰“å°è¾¹æ¡†
-        start.setBorder(null);//é™¤å»è¾¹æ¡†
-        start.setFocusPainted(false);//é™¤å»ç„¦ç‚¹çš„æ¡†
-        start.setContentAreaFilled(false);//é™¤å»é»˜è®¤çš„èƒŒæ™¯å¡«å……
+        start.setMargin(new Insets(0, 0, 0, 0));//½«±ß¿òÍâµÄÉÏÏÂ×óÓÒ¿Õ¼äÉèÖÃÎª0
+        start.setIconTextGap(0);//½«±êÇ©ÖĞÏÔÊ¾µÄÎÄ±¾ºÍÍ¼±êÖ®¼äµÄ¼ä¸ôÁ¿ÉèÖÃÎª0
+        start.setBorderPainted(false);//²»´òÓ¡±ß¿ò
+        start.setBorder(null);//³ıÈ¥±ß¿ò
+        start.setFocusPainted(false);//³ıÈ¥½¹µãµÄ¿ò
+        start.setContentAreaFilled(false);//³ıÈ¥Ä¬ÈÏµÄ±³¾°Ìî³ä
 
 
         exit.setIcon(new ImageIcon("./res/exit.png"));
-        exit.setMargin(new Insets(0, 0, 0, 0));//å°†è¾¹æ¡†å¤–çš„ä¸Šä¸‹å·¦å³ç©ºé—´è®¾ç½®ä¸º0
-        exit.setIconTextGap(0);//å°†æ ‡ç­¾ä¸­æ˜¾ç¤ºçš„æ–‡æœ¬å’Œå›¾æ ‡ä¹‹é—´çš„é—´éš”é‡è®¾ç½®ä¸º0
-        exit.setBorderPainted(false);//ä¸æ‰“å°è¾¹æ¡†
-        exit.setBorder(null);//é™¤å»è¾¹æ¡†
-        exit.setFocusPainted(false);//é™¤å»ç„¦ç‚¹çš„æ¡†
-        exit.setContentAreaFilled(false);//é™¤å»é»˜è®¤çš„èƒŒæ™¯å¡«å……
+        exit.setMargin(new Insets(0, 0, 0, 0));//½«±ß¿òÍâµÄÉÏÏÂ×óÓÒ¿Õ¼äÉèÖÃÎª0
+        exit.setIconTextGap(0);//½«±êÇ©ÖĞÏÔÊ¾µÄÎÄ±¾ºÍÍ¼±êÖ®¼äµÄ¼ä¸ôÁ¿ÉèÖÃÎª0
+        exit.setBorderPainted(false);//²»´òÓ¡±ß¿ò
+        exit.setBorder(null);//³ıÈ¥±ß¿ò
+        exit.setFocusPainted(false);//³ıÈ¥½¹µãµÄ¿ò
+        exit.setContentAreaFilled(false);//³ıÈ¥Ä¬ÈÏµÄ±³¾°Ìî³ä
 
         Font font1 = MyUtils.getSelfDefinedFont("./res/hkww.ttc", 18);
         Font font2 = MyUtils.getSelfDefinedFont("./res/font.ttf", 60);
@@ -90,7 +98,7 @@ public class GUI {
         gameLevelLabel.setFont(font1);
         gameLevelLabel.setBounds(10, 80, 200, 20);
 
-        letHuaJiFly = new JLabel("è®©æ»‘ç¨½é£");
+        letHuaJiFly = new JLabel("ÈÃ»¬»ü·É");
         letHuaJiFly.setVisible(true);
         letHuaJiFly.setFont(font2);
         letHuaJiFly.setBounds(200, 120, 500, 100);
@@ -99,8 +107,8 @@ public class GUI {
         huaJi = new JLabel();
         huaJi.setBounds(HUAJIX, HUAJIY, 300, 300);
         huaJi.setIcon(new ImageIcon("./res/normal2.png"));
-        huaJi.setIconTextGap(0);//å°†æ ‡ç­¾ä¸­æ˜¾ç¤ºçš„æ–‡æœ¬å’Œå›¾æ ‡ä¹‹é—´çš„é—´éš”é‡è®¾ç½®ä¸º0
-        huaJi.setBorder(null);//é™¤å»è¾¹æ¡†
+        huaJi.setIconTextGap(0);//½«±êÇ©ÖĞÏÔÊ¾µÄÎÄ±¾ºÍÍ¼±êÖ®¼äµÄ¼ä¸ôÁ¿ÉèÖÃÎª0
+        huaJi.setBorder(null);//³ıÈ¥±ß¿ò
 
         conn.add(start);
         conn.add(exit);
@@ -123,24 +131,53 @@ public class GUI {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                mouseX = e.getX();
-                mouseY = e.getY() - 20;
+            	mouseX = e.getX() ;
+                mouseY = e.getY() ;
             }
         });
+                
+        /*jf.addKeyListener(new KeyListener() {
+
+    		@Override
+    		public void keyTyped(KeyEvent e1) {
+    			// TODO Auto-generated method stub	
+    		}
+
+    		@Override
+    		public void keyPressed(KeyEvent e1) {
+    			if (e1.getKeyCode() == KeyEvent.VK_SHIFT) { 
+    				
+    		try {
+    			Robot myrobot;
+    			myrobot = new Robot();
+        	    myrobot.mouseMove(mouseX + movex, mouseY + movex);
+    		} catch (AWTException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		}
+    		}
+    		
+    		@Override
+    		public void keyReleased(KeyEvent e1) {
+    			// TODO Auto-generated method stub
+    		}	
+        });	*/
+        
         jf.setContentPane(conn);
         jf.setVisible(true);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /*
-     * ç”»å‡ºæ‰€æœ‰è§’è‰²
+     * »­³öËùÓĞ½ÇÉ«
      */
     public void printAllEnemies() {
         jf.getContentPane().repaint();
     }
 
     /*
-     * åœ¨å›¾ä¸­ç”»å‡ºæ–°çš„è§’è‰²
+     * ÔÚÍ¼ÖĞ»­³öĞÂµÄ½ÇÉ«
      */
     public void updateRole(Role c) {
         if (c != null) {
@@ -154,7 +191,7 @@ public class GUI {
     }
 
     /*
-    * æ¸¸æˆç»“æŸï¼Œæ¸…ç©ºç•Œé¢çš„è§’è‰²
+    * ÓÎÏ·½áÊø£¬Çå¿Õ½çÃæµÄ½ÇÉ«
     */
     public void clearRole(){
         for(int i = 0; i < roles.length; i++){

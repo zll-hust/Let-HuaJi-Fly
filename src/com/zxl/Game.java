@@ -9,23 +9,23 @@ import static com.zxl.Boom.createNewBoom;
 
 /**
  * Description:
- * æ¸¸æˆç±»ï¼ŒåŒ…å«æ‰€æœ‰æ¸¸æˆè¿è¡Œç›¸å…³å†…å®¹
+ * ÓÎÏ·Àà£¬°üº¬ËùÓĞÓÎÏ·ÔËĞĞÏà¹ØÄÚÈİ
  *
  * @encode UTF-8
  */
 public class Game {
-    public static final int ORIGNALR = 15;//çƒçš„å¤§å°ï¼Œè¦åˆ æ‰
-    public static final int EnemyNr = 15; // æ•Œäººæ•°é‡
+    //public static final int ORIGNALR = 20;//ÇòµÄ´óĞ¡£¬ÒªÉ¾µô
+    public static final int EnemyNr = 15; // µĞÈËÊıÁ¿
     public static final int MAX = 100;
     public static final int MIN = 10;
-    public static volatile boolean gamePlaying; // æ˜¯å¦æ­£åœ¨è¿›è¡Œæ¸¸æˆ
+    public static volatile boolean gamePlaying; // ÊÇ·ñÕıÔÚ½øĞĞÓÎÏ·
     public static int enemyMovingSpeed = 100;
     public GUI gui;
 
     public static Random random;
 
     /*
-     * åˆ¤æ–­æ˜¯å¦ç¢°æ’ï¼Œè‹¥æœªè†¨èƒ€è¿”å›true
+     * ÅĞ¶ÏÊÇ·ñÅö×²£¬ÈôÎ´Åö×²·µ»Øtrue
      */
     public boolean boom(Role a, Role b) {
         return a.getR() + b.getR() >=
@@ -33,12 +33,12 @@ public class Game {
     }
 
     /*
-     * å¼€å§‹æ¸¸æˆï¼ŒåŒ…æ‹¬åˆå§‹åŒ–æ•Œäººã€å¯¹æ•Œäººè¿›è¡Œå¤šçº¿ç¨‹æ§åˆ¶
+     * ¿ªÊ¼ÓÎÏ·£¬°üÀ¨³õÊ¼»¯µĞÈË¡¢¶ÔµĞÈË½øĞĞ¶àÏß³Ì¿ØÖÆ
      */
     public synchronized void startGame(final GUI gui) throws InterruptedException {
         this.gui = gui;
 
-        final Player[] player = {new Player(gui.mouseX, gui.mouseY, ORIGNALR, EnemyNr, "#00FF00", gui, MAX)};
+        final Player[] player = {new Player(gui.mouseX, gui.mouseY, EnemyNr, gui, MAX)};
         final Role[] enemies = new Role[EnemyNr];
         gamePlaying = true;
         random = new Random();
@@ -99,7 +99,7 @@ public class Game {
                     for (int i = 0; i < enemies.length; i++) {
                         if (enemies[i] != null && player != null) {
                             if (boom(enemies[i], player[0])) {
-                                //å¯¼å¼¹/ç‚¸è¯æ£€æµ‹ï¼Œæ‰£é™¤ç”Ÿå‘½å€¼
+                                //µ¼µ¯/Õ¨Ò©¼ì²â£¬¿Û³ıÉúÃüÖµ
                                 if (enemies[i].type == 2 || enemies[i].type == 5) {
                                     //TODO
                                     enemies[i] = null;
@@ -107,14 +107,14 @@ public class Game {
                                 } else if (enemies[i].type == 3) {
                                     //TODO
                                 }
-                                //è¯å‰‚æ£€æµ‹ï¼Œæ¢å¤ç”Ÿå‘½å€¼
+                                //Ò©¼Á¼ì²â£¬»Ö¸´ÉúÃüÖµ
                                 else if (enemies[i].type == 6) {
                                     //TODO
                                     enemies[i] = null;
                                     gui.jProBar.addValue(10);
                                 }
 
-                                // åˆšç¢°æ’åï¼Œä¼šæœ‰ä¸€ç§’é’Ÿæ— æ•Œæ—¶é—´
+                                // ¸ÕÅö×²ºó£¬»áÓĞÒ»ÃëÖÓÎŞµĞÊ±¼ä
                                 try {
                                     Thread.sleep(1000);
                                 } catch (InterruptedException e) {
@@ -175,14 +175,14 @@ public class Game {
     }
 
     /*
-     * æ ¹æ®ç¼–å·åˆ›é€ æ–°è§’è‰²
+     * ¸ù¾İ±àºÅ´´ÔìĞÂ½ÇÉ«
      */
     public void createRoles(int i, Role[] enemies, Player[] player){
-        if (i < EnemyNr / 5) { //æ§åˆ¶æ€ªç‰©æ•°é‡ï¼Œ1/5ä¸ºè¯æ°´
+        if (i < EnemyNr / 5) { //¿ØÖÆ¹ÖÎïÊıÁ¿£¬1/5ÎªÒ©Ë®
             do {
                 enemies[i] = createNewMedicine(i, gui);
             } while (boom(enemies[i], player[0]));
-        } else if (i < EnemyNr / 5 * 2) { //1/5ä¸ºç‚¸è¯
+        } else if (i < EnemyNr / 5 * 2) { //1/5ÎªÕ¨Ò©
             do {
                 enemies[i] = createNewBoom(i, gui);
             } while (boom(enemies[i], player[0]));
@@ -194,14 +194,14 @@ public class Game {
     }
 
     /*
-     * æ¸¸æˆç»“æŸï¼Œé€€å›åˆ°ä¸»èœå•
+     * ÓÎÏ·½áÊø£¬ÍË»Øµ½Ö÷²Ëµ¥
      */
     public void backMain(GUI gui) {
         gui.jf.getContentPane().setBackground(GUI.initColor);
         gui.jf.setBounds(gui.graphWidth / 2 - 300, gui.graphHeight / 2 - 400, 600, 800);
         gui.exit.setVisible(true);
         gui.start.setVisible(true);
-        gui.letHuaJiFly.setText("å†è¯•è¯•çœ‹å§ï¼");
+        gui.letHuaJiFly.setText("ÔÙÊÔÊÔ¿´°É£¡");
         gui.letHuaJiFly.setVisible(true);
         gui.letHuaJiFly.setBounds(120, 120, 500, 100);
         gui.jProBar.getjProgressBar().setVisible(false);
