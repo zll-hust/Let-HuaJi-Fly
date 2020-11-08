@@ -4,14 +4,14 @@ import com.zxl.GUI.*;
 
 /**
  * Description:
- * Íæ¼ÒÀà£¬¼´»¬»ü
+ * ç©å®¶ç±»ï¼Œå³æ»‘ç¨½
  *
  * @encode UTF-8
  */
 public class Player extends Role 
 {
     private int Max;
-    public static final int r = 30;
+    public static final int r = 90;
 
     public Player(int X, int Y, int id, GUI gui, int Maxsize) {
         super(X, Y, r, id, 1, gui);

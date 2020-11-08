@@ -15,17 +15,10 @@ import javax.swing.JPanel;
  * @encode UTF-8
  */
 public class PaintPanel extends JPanel {
-    String name;
-
     private Role[] roles;
 
-    public PaintPanel(Role[] roles, String name) {
+    public PaintPanel(Role[] roles) {
         this.roles = roles;
-        this.name = name;
-    }
-
-    public String toString() {
-        return name;
     }
 
     @Override
@@ -34,11 +27,9 @@ public class PaintPanel extends JPanel {
 
         for (Role nowPainting : roles) {
             if (nowPainting != null) {
-                    Image image = Toolkit.getDefaultToolkit().getImage(Role.imgPath[nowPainting.type]);
-                    BufferedImage img = MyUtils.Rotate(image, nowPainting.angle);
-                    g.drawImage(img, (int)nowPainting.getX() - (int)nowPainting.getR(), (int)nowPainting.getY() - (int)nowPainting.getR(), this);
-                
-
+                Image image = Toolkit.getDefaultToolkit().getImage(Role.imgPath[nowPainting.type]);
+                BufferedImage img = MyUtils.Rotate(image, nowPainting.angle);
+                g.drawImage(img, (int) nowPainting.getX() - (int) nowPainting.getR(), (int) nowPainting.getY() - (int) nowPainting.getR(), this);
             }
         }
     }

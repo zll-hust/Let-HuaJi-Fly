@@ -1,31 +1,35 @@
 package com.zxl;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 import static com.zxl.Missile.createNewMissile;
 import static com.zxl.Medicine.createNewMedicine;
 import static com.zxl.Boom.createNewBoom;
+import static com.zxl.AIRobot.createNewRobot;
 
 /**
  * Description:
- * ÓÎÏ·Àà£¬°üº¬ËùÓĞÓÎÏ·ÔËĞĞÏà¹ØÄÚÈİ
+ * æ¸¸æˆç±»ï¼ŒåŒ…å«æ‰€æœ‰æ¸¸æˆè¿è¡Œç›¸å…³å†…å®¹
  *
  * @encode UTF-8
  */
 public class Game {
-    //public static final int ORIGNALR = 20;//ÇòµÄ´óĞ¡£¬ÒªÉ¾µô
-    public static final int EnemyNr = 15; // µĞÈËÊıÁ¿
+    //public static final int ORIGNALR = 20;//çƒçš„å¤§å°ï¼Œè¦åˆ æ‰
+    public static final int EnemyNr = 15; // æ•Œäººæ•°é‡
+    public static final int BulletNr = 15; // å­å¼¹æ•°é‡
     public static final int MAX = 100;
     public static final int MIN = 10;
-    public static volatile boolean gamePlaying; // ÊÇ·ñÕıÔÚ½øĞĞÓÎÏ·
-    public static int enemyMovingSpeed = 100;
+    public static volatile boolean gamePlaying; // æ˜¯å¦æ­£åœ¨è¿›è¡Œæ¸¸æˆ
+    public static int enemyMovingSpeed = 100; // æ•Œäººè¿åŠ¨é€Ÿåº¦ï¼ˆçº¿ç¨‹sleepæ—¶é—´ï¼‰
+    public static int bulletShootingSpeed = 500;
     public GUI gui;
 
     public static Random random;
 
     /*
-     * ÅĞ¶ÏÊÇ·ñÅö×²£¬ÈôÎ´Åö×²·µ»Øtrue
+     * åˆ¤æ–­æ˜¯å¦ç¢°æ’ï¼Œè‹¥æœªç¢°æ’è¿”å›true
      */
     public boolean boom(Role a, Role b) {
         return a.getR() + b.getR() >=
@@ -33,13 +37,13 @@ public class Game {
     }
 
     /*
-     * ¿ªÊ¼ÓÎÏ·£¬°üÀ¨³õÊ¼»¯µĞÈË¡¢¶ÔµĞÈË½øĞĞ¶àÏß³Ì¿ØÖÆ
+     * å¼€å§‹æ¸¸æˆï¼ŒåŒ…æ‹¬åˆå§‹åŒ–æ•Œäººã€å¯¹æ•Œäººè¿›è¡Œå¤šçº¿ç¨‹æ§åˆ¶
      */
     public synchronized void startGame(final GUI gui) throws InterruptedException {
         this.gui = gui;
 
         final Player[] player = {new Player(gui.mouseX, gui.mouseY, EnemyNr, gui, MAX)};
-        final Role[] enemies = new Role[EnemyNr];
+        final Role[] enemies = new Role[EnemyNr + BulletNr];
         gamePlaying = true;
         random = new Random();
 
@@ -48,7 +52,7 @@ public class Game {
         }
         gui.jf.getContentPane().repaint();
 
-
+        // æ»‘ç¨½ç§»åŠ¨
         class playerMovingCircle implements Runnable {
             @Override
             public synchronized void run() {
@@ -65,6 +69,7 @@ public class Game {
             }
         }
 
+        // æ§åˆ¶æ€ªç‰©ç§»åŠ¨
         class enemyMoving implements Runnable {
             public synchronized void run() {
                 System.out.println("enemies moving");
@@ -74,11 +79,22 @@ public class Game {
                     e1.printStackTrace();
                 }
                 while (gamePlaying && player != null) {
-                    for (int i = 0; i < enemies.length; i++) {
+                    for (int i = 0; i < EnemyNr; i++) {
                         if (enemies[i] == null) {
                             createRoles(i, enemies, player);
                         }
                         enemies[i].move();
+                    }
+                    for (int i = EnemyNr; i < EnemyNr + BulletNr; i++) {
+                        Bullet b = (Bullet) enemies[i];
+                        if (b != null) {
+                            if (b.moveForecast()) {
+                                gui.removeRole(b);
+                                enemies[i] = null;
+                            } else {
+                                b.move();
+                            }
+                        }
                     }
                     gui.printAllEnemies();
                     try {
@@ -86,12 +102,44 @@ public class Game {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
                 }
                 System.out.println("enemies done");
             }
         }
 
+        // æ§åˆ¶å­å¼¹ç±»å°„å‡»
+        class bulletShoot implements Runnable {
+            public synchronized void run() {
+                System.out.println("bullet shooting");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                while (gamePlaying && player != null) {
+                    for (int i = 0; i < EnemyNr; i++) {
+                        if (enemies[i] != null && enemies[i].type == 3){
+                            for (int j = EnemyNr; j < EnemyNr + BulletNr; j++) {
+                                if (enemies[j] == null) {
+                                    enemies[j] = ((AIRobot) enemies[i]).shoot(j);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    gui.printAllEnemies();
+                    try {
+                        Thread.sleep(bulletShootingSpeed);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("bullet done");
+            }
+        }
+
+
+        // è¡€é‡æ§åˆ¶ï¼Œç¢°æ’ä¹‹åæ‰£è¡€
         class countScore implements Runnable {
             public synchronized void run() {
                 System.out.println("counting score");
@@ -99,27 +147,27 @@ public class Game {
                     for (int i = 0; i < enemies.length; i++) {
                         if (enemies[i] != null && player != null) {
                             if (boom(enemies[i], player[0])) {
-                                //µ¼µ¯/Õ¨Ò©¼ì²â£¬¿Û³ıÉúÃüÖµ
-                                if (enemies[i].type == 2 || enemies[i].type == 5) {
+                                //å¯¼å¼¹/ç‚¸è¯/å­å¼¹æ£€æµ‹ï¼Œæ‰£é™¤ç”Ÿå‘½å€¼
+                                if (enemies[i].type == 2 || enemies[i].type == 5 || enemies[i].type == 7) {
                                     //TODO
                                     enemies[i] = null;
                                     gui.jProBar.addValue(-20);
                                 } else if (enemies[i].type == 3) {
                                     //TODO
                                 }
-                                //Ò©¼Á¼ì²â£¬»Ö¸´ÉúÃüÖµ
+                                //è¯å‰‚æ£€æµ‹ï¼Œæ¢å¤ç”Ÿå‘½å€¼
                                 else if (enemies[i].type == 6) {
                                     //TODO
                                     enemies[i] = null;
                                     gui.jProBar.addValue(10);
                                 }
 
-                                // ¸ÕÅö×²ºó£¬»áÓĞÒ»ÃëÖÓÎŞµĞÊ±¼ä
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+//                                // åˆšç¢°æ’åï¼Œä¼šæœ‰ä¸€ç§’é’Ÿæ— æ•Œæ—¶é—´
+//                                try {
+//                                    Thread.sleep(1000);
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
                             }
                         }
                     }
@@ -163,6 +211,8 @@ public class Game {
         Thread playerMC = new Thread(pmc);
         enemyMoving em = new enemyMoving();
         Thread eM = new Thread(em);
+        bulletShoot bs = new bulletShoot();
+        Thread bS = new Thread(bs);
         countScore cs = new countScore();
         Thread cS = new Thread(cs);
         progressUI pUI = new progressUI();
@@ -170,19 +220,24 @@ public class Game {
 
         playerMC.start();
         eM.start();
+        bS.start();
         cS.start();
         tProgress.start();
     }
 
     /*
-     * ¸ù¾İ±àºÅ´´ÔìĞÂ½ÇÉ«
+     * æ ¹æ®ç¼–å·åˆ›é€ æ–°è§’è‰²
      */
-    public void createRoles(int i, Role[] enemies, Player[] player){
-        if (i < EnemyNr / 5) { //¿ØÖÆ¹ÖÎïÊıÁ¿£¬1/5ÎªÒ©Ë®
+    public void createRoles(int i, Role[] enemies, Player[] player) {
+        if (i == 1) { //AIæœºå™¨äººä¸€ä¸ª
+            do {
+                enemies[i] = createNewRobot(i, player[0], gui);
+            } while (boom(enemies[i], player[0]));
+        } else if (i < EnemyNr / 5) { //æ§åˆ¶æ€ªç‰©æ•°é‡ï¼Œ1/5ä¸ºè¯æ°´
             do {
                 enemies[i] = createNewMedicine(i, gui);
             } while (boom(enemies[i], player[0]));
-        } else if (i < EnemyNr / 5 * 2) { //1/5ÎªÕ¨Ò©
+        } else if (i < EnemyNr / 5 * 2) { //1/5ä¸ºç‚¸è¯
             do {
                 enemies[i] = createNewBoom(i, gui);
             } while (boom(enemies[i], player[0]));
@@ -194,14 +249,14 @@ public class Game {
     }
 
     /*
-     * ÓÎÏ·½áÊø£¬ÍË»Øµ½Ö÷²Ëµ¥
+     * æ¸¸æˆç»“æŸï¼Œé€€å›åˆ°ä¸»èœå•
      */
     public void backMain(GUI gui) {
         gui.jf.getContentPane().setBackground(GUI.initColor);
         gui.jf.setBounds(gui.graphWidth / 2 - 300, gui.graphHeight / 2 - 400, 600, 800);
         gui.exit.setVisible(true);
         gui.start.setVisible(true);
-        gui.letHuaJiFly.setText("ÔÙÊÔÊÔ¿´°É£¡");
+        gui.letHuaJiFly.setText("å†è¯•è¯•çœ‹å§ï¼");
         gui.letHuaJiFly.setVisible(true);
         gui.letHuaJiFly.setBounds(120, 120, 500, 100);
         gui.jProBar.getjProgressBar().setVisible(false);

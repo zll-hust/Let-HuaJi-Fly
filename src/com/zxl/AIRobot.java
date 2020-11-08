@@ -1,5 +1,7 @@
 package com.zxl;
 
+import java.util.ArrayList;
+
 import static com.zxl.Game.random;
 
 /**
@@ -23,7 +25,42 @@ public class AIRobot extends Role {
      * AI机器人
      */
     protected void calMoveDirection() {
+        angle = ((int) Math.toDegrees(Math.atan2(p.getY() - y, p.getX() - x)) + 360) % 360;
+        dx = speed * Math.cos(Math.toRadians(angle));
+        dy = speed * Math.sin(Math.toRadians(angle));
+    }
 
+    /*
+     * AI机器人运动方式：停在滑稽周围一圈
+     */
+    public void move() {
+        calMoveDirection();
+        if (boomArouned()) {
+            dx = 0;
+            dy = 0;
+        } else {
+            x += dx;
+            y += dy;
+            if (x + radius > gui.graphWidth) {
+                calMoveDirection();
+            }
+            if (y + radius > gui.graphHeight) {
+                calMoveDirection();
+            }
+        }
+        draw();
+    }
+
+    private boolean boomArouned() {
+        return this.getR() + p.getR() + 150 >=
+                Math.sqrt(Math.pow(this.getX() - p.getX(), 2) + Math.pow(this.getY() - p.getY(), 2));
+    }
+
+    /*
+     * 发射子弹
+     */
+    public Role shoot(int id){
+        return Bullet.createNewBullet(this.getX() + this.getR(), this.getY() + this.getR(), id, gui, p, angle);
     }
 
     /*

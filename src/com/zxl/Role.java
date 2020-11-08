@@ -5,22 +5,23 @@ import java.util.Random;
 
 /**
  * Description:
- * ½ÇÉ«Àà£¬×÷ÎªÍæ¼ÒÀà¡¢¹ÖÎïÀàµÄ¸¸Àà
+ * è§’è‰²ç±»ï¼Œä½œä¸ºçŽ©å®¶ç±»ã€æ€ªç‰©ç±»çš„çˆ¶ç±»
  *
  * @encode UTF-8
  */
-public class Role 
-{
+public class Role {
     protected double x, y, dx, dy;
     protected int radius;
-    // ½ÇÉ«µÄ°ë¾¶£¨¾¡Á¿°Ñ½ÇÉ«´¦ÀíÎªÔ²ÐÎ£¬·ÖÅäÅö×²¼ì²â£©£¬½ÇÉ«µÄ×ø±ê£¬Ç°½øµÄ¾àÀë
+    // è§’è‰²çš„åŠå¾„ï¼ˆå°½é‡æŠŠè§’è‰²å¤„ç†ä¸ºåœ†å½¢ï¼Œåˆ†é…ç¢°æ’žæ£€æµ‹ï¼‰ï¼Œè§’è‰²çš„åæ ‡ï¼Œå‰è¿›çš„è·ç¦»
     private int id;
     protected GUI gui;
-    public int type; // ½ÇÉ«µÄÀàÐÍ£¬²»Ð´Ã¶¾ÙÀàÁËÂé·³
-    // 1´ú±í»¬»ü£¬2´ú±íµ¼µ¯£¬3´ú±í»úÆ÷ÈË£¬4´ú±íÅÉ´óÐÇ£¬5´ú±íÕ¨Ò©£¬6´ú±íÒ©Ë®£¬7´ú±í×Óµ¯
-    public static String[] imgPath = {" ", "./res/huaji.png", "./res/rocket.png",
-            "./res/missile.png", "./res/bigStar.png", "./res/boom.png", "./res/life.png"};
-    public int angle = 0; //Í¼Æ¬×ªÏòµÄ½Ç¶È(²»ÊÇ»¡¶È)
+    public int type; // è§’è‰²çš„ç±»åž‹ï¼Œä¸å†™æžšä¸¾ç±»äº†éº»çƒ¦
+    public String color; //å°çƒçš„é¢œè‰²ï¼Œä»¥åŽè¦åˆ é™¤è¿™ä¸ªï¼Œæš‚æ—¶ä¿ç•™è°ƒè¯•ä»£ç 
+    // 1ä»£è¡¨æ»‘ç¨½ï¼Œ2ä»£è¡¨å¯¼å¼¹ï¼Œ3ä»£è¡¨æœºå™¨äººï¼Œ4ä»£è¡¨æ´¾å¤§æ˜Ÿï¼Œ5ä»£è¡¨ç‚¸è¯ï¼Œ6ä»£è¡¨è¯æ°´ï¼Œ7ä»£è¡¨å­å¼¹
+    public static String[] imgPath = {" ", "./res/normal.png", "./res/rocket.png",
+            "./res/AIRobot.png", "./res/bigStar.png", "./res/boom.png"
+            , "./res/life.png", "./res/bullet.png"};
+    public int angle = 0; //å›¾ç‰‡è½¬å‘çš„è§’åº¦(ä¸æ˜¯å¼§åº¦)
 
     public Role(double X, double Y, int R, int id, int type, GUI gui, double dx, double dy) {
         x = X;
@@ -54,10 +55,10 @@ public class Role
     public void move() {
         x += dx;
         y += dy;
-        if (x + radius > gui.graphWidth || x - radius < 0) {
+        if (x + radius > gui.graphWidth || x + radius < 0) {
             calMoveDirection();
         }
-        if (y + radius > gui.graphHeight || y - radius < GUI.PROGRESSWIDTH) {
+        if (y + radius > gui.graphHeight|| y + radius < 0) {
             calMoveDirection();
         }
         draw();
@@ -87,4 +88,5 @@ public class Role
     public int getID() {
         return id;
     }
+
 }
