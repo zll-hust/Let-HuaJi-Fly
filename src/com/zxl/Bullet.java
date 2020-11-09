@@ -4,6 +4,7 @@ public class Bullet extends Role {
     private Player p; //玩家
     private static int speed = 10; //控制速度，越大越快
     private static final int r = 10;
+    protected int area = 400;
 
     public Bullet(double X, double Y, int id, GUI gui, Player p, int angle) {
         super(X, Y, r, id, 7, gui);
@@ -33,7 +34,7 @@ public class Bullet extends Role {
     }
 
     private boolean boomArouned() {
-        return this.getR() + p.getR() + 200 >=
+        return this.getR() + p.getR() + area >=
                 Math.sqrt(Math.pow(this.getX() - p.getX(), 2) + Math.pow(this.getY() - p.getY(), 2));
     }
 

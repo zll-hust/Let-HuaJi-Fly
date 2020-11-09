@@ -19,6 +19,7 @@ public class Game {
     //public static final int ORIGNALR = 20;//球的大小，要删掉
     public static final int EnemyNr = 15; // 敌人数量
     public static final int BulletNr = 15; // 子弹数量
+    public static final int TearNr = 15; // 眼泪数量
     public static final int MAX = 100;
     public static final int MIN = 10;
     public static volatile boolean gamePlaying; // 是否正在进行游戏
@@ -43,7 +44,7 @@ public class Game {
         this.gui = gui;
 
         final Player[] player = {new Player(gui.mouseX, gui.mouseY, EnemyNr, gui, MAX)};
-        final Role[] enemies = new Role[EnemyNr + BulletNr];
+        final Role[] enemies = new Role[EnemyNr + BulletNr + TearNr];
         gamePlaying = true;
         random = new Random();
 
@@ -144,7 +145,7 @@ public class Game {
             public synchronized void run() {
                 System.out.println("counting score");
                 while (gamePlaying) {
-                    for (int i = 0; i < enemies.length; i++) {
+                    for (int i = 0; i < EnemyNr + BulletNr; i++) {
                         if (enemies[i] != null && player != null) {
                             if (boom(enemies[i], player[0])) {
                                 //导弹/炸药/子弹检测，扣除生命值

@@ -8,10 +8,9 @@ import com.zxl.GUI.*;
  *
  * @encode UTF-8
  */
-public class Player extends Role 
-{
+public class Player extends Role {
     private int Max;
-    public static final int r = 90;
+    public static final int r = 40;
 
     public Player(int X, int Y, int id, GUI gui, int Maxsize) {
         super(X, Y, r, id, 1, gui);

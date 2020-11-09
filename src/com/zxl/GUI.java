@@ -28,7 +28,7 @@ public class GUI {
 
     public int mouseX;
     public int mouseY;
-    public Role[] roles = new Role[Game.EnemyNr + Game.BulletNr + 3];
+    public Role[] roles = new Role[Game.EnemyNr + Game.BulletNr + Game.TearNr + 3];
     public PaintPanel conn = new PaintPanel(roles);// 游戏中的界面
     public JFrame jf; // 初始界面
     public JButton start;
@@ -122,6 +122,7 @@ public class GUI {
         jProBar.getjProgressBar().setVisible(false);
         conn.add(jProBar.getjProgressBar());
 
+        //获取鼠标坐标，作为滑稽的运动方向
         jf.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -148,7 +149,7 @@ public class GUI {
     		try {
     			Robot myrobot;
     			myrobot = new Robot();
-        	    myrobot.mouseMove(mouseX + movex, mouseY + movex);
+        	    myrobot.mouseMove(mouseX + movex, mouseY + movey);
     		} catch (AWTException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();

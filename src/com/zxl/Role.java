@@ -17,10 +17,11 @@ public class Role {
     protected GUI gui;
     public int type; // 角色的类型，不写枚举类了麻烦
     public String color; //小球的颜色，以后要删除这个，暂时保留调试代码
-    // 1代表滑稽，2代表导弹，3代表机器人，4代表派大星，5代表炸药，6代表药水，7代表子弹
+    // 1代表滑稽，2代表导弹，3代表机器人，4代表派大星，5代表炸药，6代表药水，7代表子弹，8代表派大星2，9代表痞老板
     public static String[] imgPath = {" ", "./res/normal.png", "./res/rocket.png",
-            "./res/AIRobot.png", "./res/bigStar.png", "./res/boom.png"
-            , "./res/life.png", "./res/bullet.png"};
+            "./res/AIRobot.png", "./res/BigStar1.png", "./res/boom.png"
+            , "./res/life.png", "./res/bullet.png", "./res/BigStar2.png"
+            , "./res/pi.png"};
     public int angle = 0; //图片转向的角度(不是弧度)
 
     public Role(double X, double Y, int R, int id, int type, GUI gui, double dx, double dy) {
