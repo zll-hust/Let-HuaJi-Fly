@@ -2,8 +2,6 @@ package com.zxl;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Random;
@@ -35,7 +33,7 @@ public class GUI {
     public JButton exit;
     public JLabel huaJi;
     public JLabel currentScoreLabel;
-    public JLabel maxScoreLabel;
+    public JLabel huajiSkillLabel;
     public JLabel gameLevelLabel; //游戏等级
     public JLabel letHuaJiFly;
     public ProgressUI jProBar; // 生命值
@@ -87,10 +85,10 @@ public class GUI {
         currentScoreLabel.setFont(font1);
         currentScoreLabel.setBounds(10, 40, 200, 20);
 
-        maxScoreLabel = new JLabel();
-        maxScoreLabel.setVisible(false);
-        maxScoreLabel.setFont(font1);
-        maxScoreLabel.setBounds(10, 60, 200, 20);
+        huajiSkillLabel = new JLabel();
+        huajiSkillLabel.setVisible(false);
+        huajiSkillLabel.setFont(font1);
+        huajiSkillLabel.setBounds(200, 80, 200, 20);
 
         gameLevelLabel = new JLabel();
         gameLevelLabel.setVisible(false);
@@ -113,7 +111,7 @@ public class GUI {
         conn.add(exit);
         conn.add(huaJi);
         conn.add(currentScoreLabel);
-        conn.add(maxScoreLabel);
+        conn.add(huajiSkillLabel);
         conn.add(gameLevelLabel);
         conn.add(letHuaJiFly);
 

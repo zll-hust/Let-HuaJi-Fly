@@ -271,6 +271,8 @@ public class Game {
                     //关卡改变
                     if (gui.jProBar2.getValue() == 100) {
                         GameLevel++;
+                        gui.huajiSkillLabel.setText("当前技能：" + "");//李璠在这里写新技能
+                        gui.gameLevelLabel.setText("难度等级：" + Game.GameLevel);
                         gui.jProBar2.addValue(-100);
                         //更新怪物
                         for (int i = 0; i < EnemyNr; i++) {

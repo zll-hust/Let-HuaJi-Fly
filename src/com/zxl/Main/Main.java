@@ -35,9 +35,10 @@ public class Main {
                 gui.letHuaJiFly.setVisible(false);
                 gui.huaJi.setVisible(false);
                 gui.currentScoreLabel.setVisible(true);
-                gui.maxScoreLabel.setVisible(true);
+                gui.huajiSkillLabel.setVisible(true);
                 gui.gameLevelLabel.setVisible(true);
                 Game.enemyMovingSpeed = 100;
+                gui.huajiSkillLabel.setText("当前技能：无");
                 gui.gameLevelLabel.setText("难度等级：" + Game.GameLevel);
                 gui.jProBar.getjProgressBar().setValue(100);
                 gui.jProBar.getjProgressBar().setVisible(true);
