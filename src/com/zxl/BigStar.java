@@ -11,7 +11,7 @@ package com.zxl;
 public class BigStar extends Role {
     private Player p; //玩家
     private static int speed = 5; //控制速度，越大越快
-    private static final int r = 32;
+    private static final int r = 75;
     private static final int shootR = 400; //发射痞老板的范围
 
     public BigStar(double X, double Y, int id, GUI gui, Player p) {

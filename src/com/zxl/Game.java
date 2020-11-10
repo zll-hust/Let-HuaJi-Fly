@@ -269,7 +269,7 @@ public class Game {
                 while (gui.jProBar.getValue() > 0 && gamePlaying) {
                     gui.jProBar2.addValue(1);
                     //关卡改变
-                    if (gui.jProBar2.getValue() == 100) {
+                    if (gui.jProBar2.getValue() == 100 && GameLevel < 3) {
                         GameLevel++;
                         gui.huajiSkillLabel.setText("当前技能：" + "");//李璠在这里写新技能
                         gui.gameLevelLabel.setText("难度等级：" + Game.GameLevel);
@@ -358,6 +358,7 @@ public class Game {
         gui.jProBar.getjProgressBar().setVisible(false);
         gui.jProBar2.getjProgressBar().setVisible(false);
         gui.clearRole();
+        GameLevel = 0;
         gui.jf.getContentPane().repaint();
     }
 }
