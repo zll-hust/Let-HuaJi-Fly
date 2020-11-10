@@ -24,6 +24,7 @@ public class Game {
     public static int BeforeBossShooting = 1000;
     public static int BossShootingSpeed = 3000;
     public GUI gui;
+    public static int GameLevel = 0; // 游戏关卡，随时间变化变化
 
     public static Random random;
 
@@ -188,7 +189,7 @@ public class Game {
         }
 
 
-        // 血量控制，碰撞之后扣血
+        // 碰撞监测
         class countScore implements Runnable {
             public synchronized void run() {
                 System.out.println("counting score");
@@ -212,7 +213,10 @@ public class Game {
                                 else if (enemies[i].type == 6) {
                                     //TODO
                                     enemies[i] = null;
+                                    //增加血量
                                     gui.jProBar.addValue(10);
+                                    //增加经验值
+                                    gui.jProBar2.addValue(5);
                                 }
 
 //                                // 刚碰撞后，会有一秒钟无敌时间
@@ -252,6 +256,9 @@ public class Game {
             }
         }
 
+        /*
+         * 控制游戏时间，改变游戏关卡
+         */
         class progressUI implements Runnable {
             public synchronized void run() {
                 try {
@@ -260,7 +267,19 @@ public class Game {
                     e.printStackTrace();
                 }
                 while (gui.jProBar.getValue() > 0 && gamePlaying) {
-//                    gui.jProBar.addValue(-1);
+                    gui.jProBar2.addValue(1);
+                    //关卡改变
+                    if (gui.jProBar2.getValue() == 100) {
+                        GameLevel++;
+                        gui.jProBar2.addValue(-100);
+                        //更新怪物
+                        for (int i = 0; i < EnemyNr; i++) {
+                            createRoles(i, enemies, player);
+                        }
+                        //TODO 关卡直接的转场可以加一些东西
+                        gui.jf.getContentPane().repaint();
+                    }
+
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
@@ -296,25 +315,29 @@ public class Game {
      * 根据编号创造新角色
      */
     public void createRoles(int i, Role[] enemies, Player[] player) {
-        if (i == 0) { //派大星一个
+        if (i == 0 && GameLevel >= 3) { //第四关，Boss派大星出现
             do {
                 enemies[i] = BigStar.createBigStar(i, player[0], gui);
             } while (boom(enemies[i], player[0]));
-        } else if (i == 1) { //AI机器人一个
+        } else if (i == 1 && GameLevel >= 2) { //第三关，增加AI机器人一个
             do {
                 enemies[i] = AIRobot.createNewRobot(i, player[0], gui);
             } while (boom(enemies[i], player[0]));
-        } else if (i < EnemyNr / 5) { //控制怪物数量，1/5为药水
-            do {
-                enemies[i] = Medicine.createNewMedicine(i, gui);
-            } while (boom(enemies[i], player[0]));
-        } else if (i < EnemyNr / 5 * 2) { //1/5为炸药
+        } else if (i < EnemyNr / 5 * 1 && GameLevel >= 1) { //第二关，增加地雷
             do {
                 enemies[i] = Boom.createNewBoom(i, gui);
             } while (boom(enemies[i], player[0]));
-        } else {
+        } else if (i < EnemyNr / 5 * 3 && GameLevel == 0) { //第一关，导弹数量较少
             do {
                 enemies[i] = Missile.createNewMissile(i, player[0], gui);
+            } while (boom(enemies[i], player[0]));
+        } else if (i < EnemyNr / 5 * 4 && GameLevel >= 1) { //第二关，导弹数量增加
+            do {
+                enemies[i] = Missile.createNewMissile(i, player[0], gui);
+            } while (boom(enemies[i], player[0]));
+        } else { //为药水
+            do {
+                enemies[i] = Medicine.createNewMedicine(i, gui);
             } while (boom(enemies[i], player[0]));
         }
     }
@@ -331,6 +354,7 @@ public class Game {
         gui.letHuaJiFly.setVisible(true);
         gui.letHuaJiFly.setBounds(120, 120, 500, 100);
         gui.jProBar.getjProgressBar().setVisible(false);
+        gui.jProBar2.getjProgressBar().setVisible(false);
         gui.clearRole();
         gui.jf.getContentPane().repaint();
     }

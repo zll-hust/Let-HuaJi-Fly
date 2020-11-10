@@ -36,9 +36,10 @@ public class GUI {
     public JLabel huaJi;
     public JLabel currentScoreLabel;
     public JLabel maxScoreLabel;
-    public JLabel gameLevelLabel;
+    public JLabel gameLevelLabel; //游戏等级
     public JLabel letHuaJiFly;
     public ProgressUI jProBar; // 生命值
+    public ProgressUI jProBar2; // 生命值
     Random rand = new Random();
     public int movex = rand.nextInt(50) + 20;
     public int movey = rand.nextInt(50) + 20;
@@ -121,6 +122,12 @@ public class GUI {
         jProBar.getjProgressBar().setLocation(0, 0);
         jProBar.getjProgressBar().setVisible(false);
         conn.add(jProBar.getjProgressBar());
+
+        jProBar2 = new ProgressUI();
+        jProBar2.getjProgressBar().setSize(graphWidth, PROGRESSWIDTH);
+        jProBar2.getjProgressBar().setLocation(0, PROGRESSWIDTH);
+        jProBar2.getjProgressBar().setVisible(false);
+        conn.add(jProBar2.getjProgressBar());
 
         //获取鼠标坐标，作为滑稽的运动方向
         jf.addMouseMotionListener(new MouseMotionListener() {

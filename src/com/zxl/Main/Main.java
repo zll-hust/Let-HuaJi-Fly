@@ -38,9 +38,12 @@ public class Main {
                 gui.maxScoreLabel.setVisible(true);
                 gui.gameLevelLabel.setVisible(true);
                 Game.enemyMovingSpeed = 100;
-                gui.gameLevelLabel.setText("难度等级：" + (100 - Game.enemyMovingSpeed));
+                gui.gameLevelLabel.setText("难度等级：" + Game.GameLevel);
                 gui.jProBar.getjProgressBar().setValue(100);
                 gui.jProBar.getjProgressBar().setVisible(true);
+                gui.jProBar.reset();
+                gui.jProBar2.getjProgressBar().setValue(0);
+                gui.jProBar2.getjProgressBar().setVisible(true);
                 gui.jf.setExtendedState(JFrame.MAXIMIZED_BOTH);//设置窗口最大化
                 try {
                     main.startGame(gui);

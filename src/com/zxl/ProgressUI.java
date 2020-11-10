@@ -43,6 +43,10 @@ public class ProgressUI {
         this.jProgressBar.setValue(progressvalue);
     }
 
+    public void reset() {
+        this.jProgressBar.setForeground(Color.CYAN);
+    }
+
     public int getValue() {
         return jProgressBar.getValue();
     }
