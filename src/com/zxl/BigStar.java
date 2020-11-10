@@ -10,8 +10,9 @@ package com.zxl;
  */
 public class BigStar extends Role {
     private Player p; //玩家
-    private static int speed = 10; //控制速度，越大越快
+    private static int speed = 5; //控制速度，越大越快
     private static final int r = 32;
+    private static final int shootR = 400; //发射痞老板的范围
 
     public BigStar(double X, double Y, int id, GUI gui, Player p) {
         super(X, Y, r, id, 4, gui);
@@ -41,18 +42,36 @@ public class BigStar extends Role {
         draw();
     }
 
+    public boolean boomArouned() {
+        return this.getR() + p.getR() + shootR >=
+                Math.sqrt(Math.pow(this.getX() - p.getX(), 2) + Math.pow(this.getY() - p.getY(), 2));
+    }
+
+    /*
+     * 派大星超级变换形态
+     */
+    public void changeType(){
+        if(this.type == 4)
+            this.type = 8;
+        else
+            this.type = 4;
+    }
+
 
     /*
      * 发射子弹
      */
-    public Role shoot(int id) {
-        //TODO
-        return BossPi.createNewBullet(this.getX() + this.getR(), this.getY() + this.getR(), id, gui, angle);
+    public Role[] shoot(int id) {
+        Role[] pis = new Role[16];
+        // 向周围一圈发射16个痞老板
+        for(int i = 0; i < 16; i++){
+            pis[i] = BossPi.createNewBossPi(this.getX() + this.getR(), this.getY() + this.getR(), id + i, gui, (int)(i * 22.5));
+        }
+        return pis;
     }
 
     /*
      * 产生怪物3：派大星
-     * 随机生成在围墙上
      */
     public static Role createBigStar(int id, Player p, GUI gui) {
         return new BigStar(100, 100, id, gui, p);

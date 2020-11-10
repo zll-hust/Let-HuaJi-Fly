@@ -12,7 +12,7 @@ import static com.zxl.Game.random;
  */
 public class AIRobot extends Role {
     private Player p; //玩家
-    private static int speed = 15; //控制速度，越大越快
+    private static int speed = 12; //控制速度，越大越快
     private static final int r = 32;
 
     public AIRobot(double X, double Y, int id, GUI gui, Player p) {

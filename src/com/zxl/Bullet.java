@@ -2,7 +2,7 @@ package com.zxl;
 
 public class Bullet extends Role {
     private Player p; //玩家
-    private static int speed = 10; //控制速度，越大越快
+    private static int speed = 17; //控制速度，越大越快
     private static final int r = 10;
     protected int area = 400;
 

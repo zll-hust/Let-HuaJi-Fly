@@ -1,13 +1,8 @@
 package com.zxl;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 
-import static com.zxl.Missile.createNewMissile;
-import static com.zxl.Medicine.createNewMedicine;
-import static com.zxl.Boom.createNewBoom;
-import static com.zxl.AIRobot.createNewRobot;
 
 /**
  * Description:
@@ -20,11 +15,14 @@ public class Game {
     public static final int EnemyNr = 15; // 敌人数量
     public static final int BulletNr = 15; // 子弹数量
     public static final int TearNr = 15; // 眼泪数量
+    public static final int PiNr = 16; // 眼泪数量
     public static final int MAX = 100;
     public static final int MIN = 10;
     public static volatile boolean gamePlaying; // 是否正在进行游戏
     public static int enemyMovingSpeed = 100; // 敌人运动速度（线程sleep时间）
     public static int bulletShootingSpeed = 500;
+    public static int BeforeBossShooting = 1000;
+    public static int BossShootingSpeed = 3000;
     public GUI gui;
 
     public static Random random;
@@ -44,7 +42,7 @@ public class Game {
         this.gui = gui;
 
         final Player[] player = {new Player(gui.mouseX, gui.mouseY, EnemyNr, gui, MAX)};
-        final Role[] enemies = new Role[EnemyNr + BulletNr + TearNr];
+        final Role[] enemies = new Role[EnemyNr + BulletNr + TearNr + PiNr];
         gamePlaying = true;
         random = new Random();
 
@@ -70,7 +68,7 @@ public class Game {
             }
         }
 
-        // 控制怪物移动
+        // 控制角色移动
         class enemyMoving implements Runnable {
             public synchronized void run() {
                 System.out.println("enemies moving");
@@ -80,12 +78,14 @@ public class Game {
                     e1.printStackTrace();
                 }
                 while (gamePlaying && player != null) {
+                    // 处理怪物移动
                     for (int i = 0; i < EnemyNr; i++) {
                         if (enemies[i] == null) {
                             createRoles(i, enemies, player);
                         }
                         enemies[i].move();
                     }
+                    // 处理子弹移动
                     for (int i = EnemyNr; i < EnemyNr + BulletNr; i++) {
                         Bullet b = (Bullet) enemies[i];
                         if (b != null) {
@@ -95,6 +95,12 @@ public class Game {
                             } else {
                                 b.move();
                             }
+                        }
+                    }
+                    // 处理痞老板移动
+                    for (int i = EnemyNr + BulletNr + TearNr; i < EnemyNr + BulletNr + TearNr + PiNr; i++) {
+                        if (enemies[i] != null) {
+                            enemies[i].move();
                         }
                     }
                     gui.printAllEnemies();
@@ -118,13 +124,12 @@ public class Game {
                     e1.printStackTrace();
                 }
                 while (gamePlaying && player != null) {
-                    for (int i = 0; i < EnemyNr; i++) {
-                        if (enemies[i] != null && enemies[i].type == 3){
-                            for (int j = EnemyNr; j < EnemyNr + BulletNr; j++) {
-                                if (enemies[j] == null) {
-                                    enemies[j] = ((AIRobot) enemies[i]).shoot(j);
-                                    break;
-                                }
+                    int i = 1; // i = 1代表AI机器人
+                    if (enemies[i] != null && enemies[i].type == 3) {
+                        for (int j = EnemyNr; j < EnemyNr + BulletNr; j++) {
+                            if (enemies[j] == null) {
+                                enemies[j] = ((AIRobot) enemies[i]).shoot(j);
+                                break;
                             }
                         }
                     }
@@ -139,6 +144,49 @@ public class Game {
             }
         }
 
+        // 控制派大星射击痞老板类
+        class BigStarShoot implements Runnable {
+            public synchronized void run() {
+                System.out.println("BigStar shooting");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                while (gamePlaying && player != null) {
+                    int i = 0; // i = 0代表派大星
+                    if (enemies[i] != null && (enemies[i].type == 4 || enemies[i].type == 8) && ((BigStar) enemies[i]).boomArouned()) {
+                        ((BigStar) enemies[i]).changeType();
+
+                        try {
+                            Thread.sleep(BeforeBossShooting);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        Role[] pis = ((BigStar) enemies[i]).shoot(EnemyNr + BulletNr + TearNr);
+                        for (int j = 0; j < PiNr; j++) {
+                            enemies[EnemyNr + BulletNr + TearNr + j] = pis[j];
+                        }
+
+                        gui.printAllEnemies();
+                        try {
+                            Thread.sleep(BeforeBossShooting);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        ((BigStar) enemies[i]).changeType();
+                    }
+                    try {
+                        Thread.sleep(BossShootingSpeed);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("BigStar done");
+            }
+        }
+
 
         // 血量控制，碰撞之后扣血
         class countScore implements Runnable {
@@ -149,12 +197,16 @@ public class Game {
                         if (enemies[i] != null && player != null) {
                             if (boom(enemies[i], player[0])) {
                                 //导弹/炸药/子弹检测，扣除生命值
-                                if (enemies[i].type == 2 || enemies[i].type == 5 || enemies[i].type == 7) {
+                                if (enemies[i].type == 2 || enemies[i].type == 5 ||
+                                        enemies[i].type == 7) {
                                     //TODO
+                                    gui.removeRole(enemies[i]);
                                     enemies[i] = null;
                                     gui.jProBar.addValue(-20);
-                                } else if (enemies[i].type == 3) {
-                                    //TODO
+                                }
+                                //被派大星抓到，直接暴毙
+                                else if (enemies[i].type == 4 || enemies[i].type == 9) {
+                                    gamePlaying = false;
                                 }
                                 //药剂检测，恢复生命值
                                 else if (enemies[i].type == 6) {
@@ -170,6 +222,17 @@ public class Game {
 //                                    e.printStackTrace();
 //                                }
                             }
+                        }
+                    }
+
+                    for (int i = EnemyNr + BulletNr + TearNr; i < EnemyNr + BulletNr + TearNr + PiNr; i++) {
+                        if (enemies[i] != null && player != null) {
+                            if (boom(enemies[i], player[0])) {
+                                gui.removeRole(enemies[i]);
+                                enemies[i] = null;
+                                gui.jProBar.addValue(-20);
+                            }
+                            //派大星发射的炮弹会摧毁沿途的墙体
                         }
                     }
                 }
@@ -214,6 +277,8 @@ public class Game {
         Thread eM = new Thread(em);
         bulletShoot bs = new bulletShoot();
         Thread bS = new Thread(bs);
+        BigStarShoot bss = new BigStarShoot();
+        Thread bsS = new Thread(bss);
         countScore cs = new countScore();
         Thread cS = new Thread(cs);
         progressUI pUI = new progressUI();
@@ -222,6 +287,7 @@ public class Game {
         playerMC.start();
         eM.start();
         bS.start();
+        bsS.start();
         cS.start();
         tProgress.start();
     }
@@ -230,21 +296,25 @@ public class Game {
      * 根据编号创造新角色
      */
     public void createRoles(int i, Role[] enemies, Player[] player) {
-        if (i == 1) { //AI机器人一个
+        if (i == 0) { //派大星一个
             do {
-                enemies[i] = createNewRobot(i, player[0], gui);
+                enemies[i] = BigStar.createBigStar(i, player[0], gui);
+            } while (boom(enemies[i], player[0]));
+        } else if (i == 1) { //AI机器人一个
+            do {
+                enemies[i] = AIRobot.createNewRobot(i, player[0], gui);
             } while (boom(enemies[i], player[0]));
         } else if (i < EnemyNr / 5) { //控制怪物数量，1/5为药水
             do {
-                enemies[i] = createNewMedicine(i, gui);
+                enemies[i] = Medicine.createNewMedicine(i, gui);
             } while (boom(enemies[i], player[0]));
         } else if (i < EnemyNr / 5 * 2) { //1/5为炸药
             do {
-                enemies[i] = createNewBoom(i, gui);
+                enemies[i] = Boom.createNewBoom(i, gui);
             } while (boom(enemies[i], player[0]));
         } else {
             do {
-                enemies[i] = createNewMissile(i, player[0], gui);
+                enemies[i] = Missile.createNewMissile(i, player[0], gui);
             } while (boom(enemies[i], player[0]));
         }
     }

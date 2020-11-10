@@ -8,11 +8,11 @@ package com.zxl;
  * @encode UTF-8
  */
 public class BossPi extends Role {
-    private static int speed = 10; //控制速度，越大越快
+    private static int speed = 15; //控制速度，越大越快
     private static final int r = 10;
 
     public BossPi(double X, double Y, int id, GUI gui, int angle) {
-        super(X, Y, r, id, 7, gui);
+        super(X, Y, r, id, 9, gui);
         this.angle = angle;
         calMoveDirection();
     }
@@ -22,7 +22,7 @@ public class BossPi extends Role {
         dy = speed * Math.sin(Math.toRadians(angle));
     }
 
-    public static Role createNewBullet(double X, double Y, int id, GUI gui, int angle) {
+    public static Role createNewBossPi(double X, double Y, int id, GUI gui, int angle) {
         return new BossPi(X, Y, id, gui, angle);
     }
 }

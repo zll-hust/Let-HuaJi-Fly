@@ -28,7 +28,7 @@ public class GUI {
 
     public int mouseX;
     public int mouseY;
-    public Role[] roles = new Role[Game.EnemyNr + Game.BulletNr + Game.TearNr + 3];
+    public Role[] roles = new Role[Game.EnemyNr + Game.BulletNr + Game.TearNr + Game.PiNr + 3];
     public PaintPanel conn = new PaintPanel(roles);// 游戏中的界面
     public JFrame jf; // 初始界面
     public JButton start;
@@ -180,7 +180,9 @@ public class GUI {
      */
     public void updateRole(Role c) {
         if (c != null) {
-            if (c.getID() == Game.EnemyNr || c.getID() == Game.EnemyNr + Game.BulletNr) {
+            if (c.getID() == Game.EnemyNr ||
+                    c.getID() == Game.EnemyNr + Game.BulletNr ||
+                    c.getID() == Game.EnemyNr + Game.BulletNr + Game.TearNr + Game.PiNr) {
                 roles[c.getID()] = c;
                 jf.getContentPane().repaint();
             } else {
