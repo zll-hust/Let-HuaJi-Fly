@@ -2,6 +2,8 @@ package com.zxl;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Random;
@@ -14,7 +16,7 @@ import java.util.Random;
  */
 public class GUI {
     public final int graphWidth;
-    public final int graphHeight;
+    public int graphHeight;
     public final int STARTX = 150; // 开始图标的坐标
     public final int STARTY = 500;
     public final int EXITX = 300; // 结束图标的坐标
@@ -33,7 +35,7 @@ public class GUI {
     public JButton exit;
     public JLabel huaJi;
     public JLabel currentScoreLabel;
-    public JLabel huajiSkillLabel;
+    public JLabel huajiBlood;
     public JLabel gameLevelLabel; //游戏等级
     public JLabel letHuaJiFly;
     public ProgressUI jProBar; // 生命值
@@ -41,7 +43,7 @@ public class GUI {
     Random rand = new Random();
     public int movex = rand.nextInt(50) + 20;
     public int movey = rand.nextInt(50) + 20;
-
+    
     public static Color initColor;
 
     public GUI() {
@@ -85,10 +87,10 @@ public class GUI {
         currentScoreLabel.setFont(font1);
         currentScoreLabel.setBounds(10, 40, 200, 20);
 
-        huajiSkillLabel = new JLabel();
-        huajiSkillLabel.setVisible(false);
-        huajiSkillLabel.setFont(font1);
-        huajiSkillLabel.setBounds(200, 80, 200, 20);
+        huajiBlood = new JLabel();
+        huajiBlood.setVisible(false);
+        huajiBlood.setFont(font1);
+        huajiBlood.setBounds(200, 80, 200, 20);
 
         gameLevelLabel = new JLabel();
         gameLevelLabel.setVisible(false);
@@ -111,7 +113,7 @@ public class GUI {
         conn.add(exit);
         conn.add(huaJi);
         conn.add(currentScoreLabel);
-        conn.add(huajiSkillLabel);
+        conn.add(huajiBlood);
         conn.add(gameLevelLabel);
         conn.add(letHuaJiFly);
 
@@ -126,6 +128,7 @@ public class GUI {
         jProBar2.getjProgressBar().setLocation(0, PROGRESSWIDTH);
         jProBar2.getjProgressBar().setVisible(false);
         conn.add(jProBar2.getjProgressBar());
+        
 
         //获取鼠标坐标，作为滑稽的运动方向
         jf.addMouseMotionListener(new MouseMotionListener() {
@@ -139,34 +142,25 @@ public class GUI {
                 mouseY = e.getY();
             }
         });
-                
-        /*jf.addKeyListener(new KeyListener() {
-
-    		@Override
-    		public void keyTyped(KeyEvent e1) {
-    			// TODO Auto-generated method stub	
-    		}
-
-    		@Override
-    		public void keyPressed(KeyEvent e1) {
-    			if (e1.getKeyCode() == KeyEvent.VK_SHIFT) { 
-    				
-    		try {
-    			Robot myrobot;
-    			myrobot = new Robot();
-        	    myrobot.mouseMove(mouseX + movex, mouseY + movey);
-    		} catch (AWTException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    		}
-    		}
-    		
-    		@Override
-    		public void keyReleased(KeyEvent e1) {
-    			// TODO Auto-generated method stub
-    		}	
-        });	*/
+        
+        // 通过键盘控制滑稽的两个技能，加速和喷射眼泪
+//        jf.addKeyListener(new KeyListener() {
+//
+//    		public void keyTyped(KeyEvent e1) {
+//    			// TODO Auto-generated method stub	
+//    		}
+//
+//    		public void keyPressed(KeyEvent e1) {
+//    			if (e1.getKeyCode() == KeyEvent.VK_SHIFT) {
+//    				Game.playerMovingSpeed = Game.playerMovingSpeed / 3;
+//    		}
+//    		}
+//    		
+//    		@Override
+//    		public void keyReleased(KeyEvent e1) {
+//    			// TODO Auto-generated method stub
+//    		}	
+//        });	
 
         jf.setContentPane(conn);
         jf.setVisible(true);
@@ -187,6 +181,7 @@ public class GUI {
         if (c != null) {
             if (c.getID() == Game.EnemyNr ||
                     c.getID() == Game.EnemyNr + Game.BulletNr ||
+                    c.getID() == Game.EnemyNr + Game.BulletNr + Game.TearNr ||
                     c.getID() == Game.EnemyNr + Game.BulletNr + Game.TearNr + Game.PiNr) {
                 roles[c.getID()] = c;
                 jf.getContentPane().repaint();
