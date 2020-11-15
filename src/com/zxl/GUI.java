@@ -2,10 +2,7 @@ package com.zxl;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.Random;
 
 /**
@@ -41,9 +38,8 @@ public class GUI {
     public ProgressUI jProBar; // 生命值
     public ProgressUI jProBar2; // 生命值
     Random rand = new Random();
-    public int movex = rand.nextInt(50) + 20;
-    public int movey = rand.nextInt(50) + 20;
-    
+    Player p;
+   
     public static Color initColor;
 
     public GUI() {
@@ -128,7 +124,7 @@ public class GUI {
         jProBar2.getjProgressBar().setLocation(0, PROGRESSWIDTH);
         jProBar2.getjProgressBar().setVisible(false);
         conn.add(jProBar2.getjProgressBar());
-        
+
 
         //获取鼠标坐标，作为滑稽的运动方向
         jf.addMouseMotionListener(new MouseMotionListener() {
@@ -142,26 +138,34 @@ public class GUI {
                 mouseY = e.getY();
             }
         });
-        
-        // 通过键盘控制滑稽的两个技能，加速和喷射眼泪
-//        jf.addKeyListener(new KeyListener() {
-//
-//    		public void keyTyped(KeyEvent e1) {
-//    			// TODO Auto-generated method stub	
-//    		}
-//
-//    		public void keyPressed(KeyEvent e1) {
-//    			if (e1.getKeyCode() == KeyEvent.VK_SHIFT) {
-//    				Game.playerMovingSpeed = Game.playerMovingSpeed / 3;
-//    		}
-//    		}
-//    		
-//    		@Override
-//    		public void keyReleased(KeyEvent e1) {
-//    			// TODO Auto-generated method stub
-//    		}	
-//        });	
 
+
+        // 通过键盘控制滑稽的两个技能，加速和闪现
+        jf.addKeyListener(new KeyListener() {
+
+            public void keyTyped(KeyEvent e1) {
+                
+            }
+            public void keyPressed(KeyEvent e1) {
+                if (e1.getKeyCode() == KeyEvent.VK_S) {
+                    Game.playerMovingSpeed = Game.playerMovingSpeed / 2;
+                }
+                
+                if(e1.getKeyCode() == KeyEvent.VK_D) {
+                	Player.flashx = 150;
+                	Player.flashy = 150;
+                }
+            }
+            public void keyReleased(KeyEvent e1) {
+            	if(e1.getKeyCode() == KeyEvent.VK_D) {
+            		Player.flashx = 0;
+            		Player.flashy = 0;
+            	}
+                
+            }
+        });
+
+        jf.setFocusable(true);
         jf.setContentPane(conn);
         jf.setVisible(true);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

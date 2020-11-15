@@ -1,8 +1,11 @@
 package com.zxl;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
 
+import javax.swing.JFrame;
 
 
 /**
@@ -14,21 +17,19 @@ import java.util.Random;
 public class Game {
     public static final int EnemyNr = 15; // 敌人数量
     public static final int BulletNr = 15; // 子弹数量
-    public static final int TearNr = 25; // 眼泪数量
+    public static final int TearNr = 100; // 眼泪数量
     public static final int PiNr = 16; // 痞老板数量
     public static final int MAX = 100;
     public static final int MIN = 10;
     public static volatile boolean gamePlaying; // 是否正在进行游戏
     public static int playerMovingSpeed = 60;  // 滑稽运动速度
     public static int enemyMovingSpeed = 100; // 敌人运动速度（线程sleep时间）
-    public static int BeforePlayerShooting = 1000;
-    public static int PlayerShootingSpeed = 3000;
+    public static int PlayerShootingSpeed = 150;
     public static int BeforeBossShooting = 1000;
     public static int BossShootingSpeed = 3000;
     public static int bulletShootingSpeed = 500;
     public GUI gui;
-    //public Player p;
-    public static int GameLevel = 0; // 游戏关卡，随时间变化变化
+    public static int GameLevel = 2; // 游戏关卡，随时间变化变化
 
     public static Random random;
 
@@ -47,7 +48,6 @@ public class Game {
         this.gui = gui;
         final Role[] enemies = new Role[EnemyNr + BulletNr + TearNr + PiNr];
         final Player[] player = {new Player(gui.mouseX, gui.mouseY, enemies.length, gui, MAX)};
-       // final BigStar[] bigstar = {new BigStar(p.x, p.y, enemies.length, gui, p)};
         gamePlaying = true;
         random = new Random();
 
@@ -107,21 +107,21 @@ public class Game {
                             }
                         }
                     }
-                    
-                 // 处理眼泪移动
+
+                    // 处理眼泪移动
                     for (int i = EnemyNr + BulletNr; i < EnemyNr + BulletNr + TearNr; i++) {
                         if (enemies[i] != null) {
                             enemies[i].move();
                         }
-                    }    
-                    
+                    }
+
                     // 处理痞老板移动
                     for (int i = EnemyNr + BulletNr + TearNr; i < EnemyNr + BulletNr + TearNr + PiNr; i++) {
                         if (enemies[i] != null) {
                             enemies[i].move();
                         }
                     }
-                    
+
                     gui.printAllEnemies();
                     try {
                         Thread.sleep(enemyMovingSpeed);
@@ -162,7 +162,7 @@ public class Game {
                 System.out.println("bullet done");
             }
         }
-        
+
         // 控制滑稽的眼泪发射
         class TearShoot implements Runnable {
             public synchronized void run() {
@@ -172,33 +172,24 @@ public class Game {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-                while (gamePlaying && player != null) {
-                    int i = 2; // i = 2代表滑稽
-                    if (enemies[i] != null && (enemies[i].type == 1)) {
-                        try {
-                            Thread.sleep(BeforePlayerShooting);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                player[0].changeType();
 
-                        Role[] tears = ((Player) enemies[i]).shoot(EnemyNr + BulletNr);
-                        for (int j = 0; j < TearNr; j++) {
-                            enemies[EnemyNr + BulletNr + j] = tears[j];
+                if (player[0] != null) {
+                    for (int j = EnemyNr + BulletNr; j < EnemyNr + BulletNr + TearNr; j++) {
+                        if (enemies[j] == null) {
+                            enemies[j] = player[0].shoot(j);
+                            gui.printAllEnemies();
+                            // 射击一次，暂停一下
+                            try {
+                                Thread.sleep(PlayerShootingSpeed);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-
-                        gui.printAllEnemies();
-                        try {
-                            Thread.sleep(BeforePlayerShooting);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    try {
-                        Thread.sleep(PlayerShootingSpeed);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
+
+                player[0].changeType();
                 System.out.println("Tear done");
             }
         }
@@ -287,19 +278,36 @@ public class Game {
                             }
                         }
                     }
-                    
-                    // 滑稽发射的眼泪射中派大星会增加血量
-//                    for (int i = EnemyNr + BulletNr; i < EnemyNr + BulletNr + TearNr; i++) {
-//                    	if(enemies[i] != null && bigstar != null) {
-//                    		if(boom(enemies[i], bigstar[0])) {                   			
-//                    			gui.removeRole(enemies[i]);
-//                    			enemies[i] = null;
-//                    			gui.jProBar.addValue(5);
-//                    		}
-//                    	}
-//                    	
-//                    }
 
+                    // 滑稽发射的眼泪射中导弹可以使敌人和子弹都消失(处理派大星)
+                    for (int i = EnemyNr + BulletNr; i < EnemyNr + BulletNr + TearNr; i++) {
+                        for (int j = 1; j < EnemyNr + BulletNr; j++) {
+                            if (enemies[i] != null && enemies[j] != null) {
+                                if (boom(enemies[i], enemies[j])) {
+                                    gui.removeRole(enemies[i]);
+                                    enemies[i] = null;
+                                    gui.removeRole(enemies[j]);
+                                    enemies[j] = null;
+                                }
+                            }
+                            break;
+                        }
+                        // 清除痞老板
+                        for (int j = EnemyNr + BulletNr + TearNr; j < EnemyNr + BulletNr + TearNr + PiNr; j++) {
+                            if (enemies[i] != null && enemies[j] != null) {
+                                if (boom(enemies[i], enemies[j])) {
+                                    gui.removeRole(enemies[i]);
+                                    enemies[i] = null;
+                                    gui.removeRole(enemies[j]);
+                                    enemies[j] = null;
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+
+                    // 痞老板，扣除生命值
                     for (int i = EnemyNr + BulletNr + TearNr; i < EnemyNr + BulletNr + TearNr + PiNr; i++) {
                         if (enemies[i] != null && player != null) {
                             if (boom(enemies[i], player[0])) {
@@ -342,14 +350,14 @@ public class Game {
                     //关卡改变
                     if (gui.jProBar2.getValue() == 100 && GameLevel < 3) {
                         GameLevel++;
-                        gui.huajiBlood.setText("当前技能：" + "加速，喷射眼泪");//李璠在这里写新技能
+                        gui.huajiBlood.setText("当前技能：" + "加速，喷射眼泪，闪现");//李璠在这里写新技能
                         gui.gameLevelLabel.setText("难度等级：" + Game.GameLevel);
                         gui.jProBar2.addValue(-100);
                         //更新怪物
                         for (int i = 0; i < EnemyNr; i++) {
                             createRoles(i, enemies, player);
                         }
-                        //TODO 关卡直接的转场可以加一些东西
+                        //TODO 关卡之间的转场可以加一些东西
                         gui.jf.getContentPane().repaint();
                     }
 
@@ -381,21 +389,40 @@ public class Game {
         playerMC.start();
         eM.start();
         bS.start();
-        tS.start();
         bsS.start();
         cS.start();
         tProgress.start();
+
+        // 按下W键发射眼泪
+        gui.jf.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent e1) {
+
+            }
+
+            public void keyPressed(KeyEvent e1) {
+                if (!tS.isAlive() && e1.getKeyCode() == KeyEvent.VK_W) {
+                    tS.start();
+                }
+            }
+
+            public void keyReleased(KeyEvent e1) {
+
+            }
+        });
+        gui.jf.setFocusable(true);
+        gui.jf.setVisible(true);
+        gui.jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /*
      * 根据编号创造新角色
      */
     public void createRoles(int i, Role[] enemies, Player[] player) {
-        if (i == 1 && GameLevel >= 3) { //第四关，Boss派大星出现
+        if (i == 0 && GameLevel >= 3) { //第四关，Boss派大星出现
             do {
                 enemies[i] = BigStar.createBigStar(i, player[0], gui);
             } while (boom(enemies[i], player[0]));
-        } else if (i == 2 && GameLevel >= 2) { //第三关，增加AI机器人一个
+        } else if (i == 1 && GameLevel >= 2) { //第三关，增加AI机器人一个
             do {
                 enemies[i] = AIRobot.createNewRobot(i, player[0], gui);
             } while (boom(enemies[i], player[0]));
@@ -411,7 +438,7 @@ public class Game {
             do {
                 enemies[i] = Missile.createNewMissile(i, player[0], gui);
             } while (boom(enemies[i], player[0]));
-        } else{ //为药水
+        } else { //为药水
             do {
                 enemies[i] = Medicine.createNewMedicine(i, gui);
             } while (boom(enemies[i], player[0]));

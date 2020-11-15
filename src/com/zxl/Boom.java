@@ -4,7 +4,7 @@ import static com.zxl.Game.random;
 
 /**
  * Description:
- * 药水类，吃了恢复生命值，不动
+ * 地雷类，减生命值，不动
  *
  * @encode UTF-8
  */
@@ -16,7 +16,7 @@ public class Boom extends Role{
     }
 
     /*
-     * 产生药水
+     * 产生地雷
      * 随机生成在任何位置
      */
     public static Role createNewBoom(int id,  GUI gui) {

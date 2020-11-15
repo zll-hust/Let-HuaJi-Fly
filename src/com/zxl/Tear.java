@@ -6,7 +6,7 @@ package com.zxl;
  */
 
 public class Tear extends Role{
-	    private static int speed = 18; //控制速度，越大越快
+	    private static int speed = 20; //控制速度，越大越快
 	    private static final int r = 10;
 
 	    public Tear(double X, double Y, int id, GUI gui, int angle) {

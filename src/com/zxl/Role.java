@@ -18,7 +18,7 @@ public class Role {
     public int type; // 角色的类型，不写枚举类了麻烦
     public String color; //小球的颜色，以后要删除这个，暂时保留调试代码
     // 1代表滑稽，2代表导弹，3代表机器人，4代表派大星，5代表炸药，6代表药水，7代表子弹，8代表派大星2，9代表痞老板，10代表眼泪
-    public static String[] imgPath = {" ", "./res/normal.png", "./res/rocket.png",
+    public static String[] imgPath = {"./res/shoot.png", "./res/normal.png", "./res/rocket.png",
             "./res/AIRobot.png", "./res/BigStar1.png", "./res/boom.png"
             , "./res/life.png", "./res/bullet.png", "./res/BigStar2.png"
             , "./res/pi.png","./res/tear.png"};

@@ -28,8 +28,6 @@ public class Missile extends Role {
         angle = ((int) Math.toDegrees(Math.atan2(p.getY() - y, p.getX() - x) + Math.PI * 0.25) + 360) % 360;
         dx = speed * (p.getX() - x) / Math.sqrt(Math.pow(p.getY() - y, 2) + Math.pow(p.getX() - x, 2));
         dy = speed * (p.getY() - y) / (Math.sqrt(Math.pow(p.getY() - y, 2) + Math.pow(p.getX() - x, 2)));
-//        dx = speed * Math.cos(Math.toRadians(angle));
-//        dy = speed * Math.sin(Math.toRadians(angle));
     }
 
     /*
