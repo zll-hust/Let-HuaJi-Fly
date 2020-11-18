@@ -1,7 +1,8 @@
 package com.zxl.Main;
 
-import com.zxl.GUI;
-import com.zxl.Game;
+import com.zxl.GUI.GUI;
+import com.zxl.Game.Game;
+import com.zxl.Utils.MyUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,8 +23,7 @@ public class Main {
         System.out.println("gui初始化完成！");
         Game.gamePlaying = false;
         GUI.initColor = gui.jf.getContentPane().getBackground();
-
-
+        Game.historyScore = MyUtils.readRecordFromFile("./res/record.txt");
         gui.jf.getContentPane().repaint();
 
         // 开始游戏
@@ -32,13 +32,17 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 gui.start.setVisible(false);
                 gui.exit.setVisible(false);
+                gui.backPic.setVisible(true);
                 gui.letHuaJiFly.setVisible(false);
                 gui.huaJi.setVisible(false);
                 gui.currentScoreLabel.setVisible(true);
-                gui.huajiBlood.setVisible(true);
+                gui.historyScore.setVisible(true);
+                gui.huajiBloodLabel.setVisible(true);
                 gui.gameLevelLabel.setVisible(true);
                 Game.enemyMovingSpeed = 100;
-                gui.huajiBlood.setText("当前技能：闪现，加速，喷射眼泪");
+                gui.currentScoreLabel.setText("当前得分：" + Game.score);
+                gui.historyScore.setText("历史最高分：" + Game.historyScore);
+                gui.huajiBloodLabel.setText("技能栏：闪现 D ，加速 S，喷射眼泪 W");
                 gui.gameLevelLabel.setText("难度等级：" + Game.GameLevel);
                 gui.jProBar.getjProgressBar().setValue(100);
                 gui.jProBar.getjProgressBar().setVisible(true);
@@ -58,7 +62,7 @@ public class Main {
         gui.jf.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                //TODO
+                MyUtils.writeRecordInFile("./res/record.txt", Game.historyScore);
             }
         });
 
@@ -66,7 +70,7 @@ public class Main {
         gui.exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO
+                MyUtils.writeRecordInFile("./res/record.txt", Game.historyScore);
                 System.exit(0);
             }
         });
